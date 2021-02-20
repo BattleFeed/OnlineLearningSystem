@@ -9,7 +9,6 @@ namespace OnlineLearningSystem.Models
     {
         public int ID { get; set; }
         public int CourseID { get; set; }
-        public int UserID { get; set; }
         public bool IsCompleted { get; set; } // Whether the user has completed the course
 
         public Course Course { get; set; }
