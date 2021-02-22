@@ -53,10 +53,10 @@ namespace OnlineLearningSystem
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapAreaControllerRoute(
-                    "Admin",
-                    "Admin",
-                    "Admin/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "areaRoute",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                    );
 
                 endpoints.MapControllerRoute(
                     name: "default",
