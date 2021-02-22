@@ -11,7 +11,7 @@ namespace OnlineLearningSystem.Models
         public int SectionID { get; set; }
         public int Score { get; set; }
         public string Description { get; set; }
-
+        public int CorrectChoiceID { get; set; }
         public ICollection<string> Choices { get; set; }
     }
 }

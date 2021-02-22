@@ -10,6 +10,7 @@ namespace OnlineLearningSystem.Models
         public int ID { get; set; }
         public int CourseID { get; set; }
         public int Score { get; set; }
+        public string Intro { get; set; }
 
         public Course Course { get; set; }
         public ICollection<Problem> Problems { get; set; }

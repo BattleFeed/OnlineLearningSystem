@@ -10,6 +10,7 @@ namespace OnlineLearningSystem.Models
         public int ID { get; set; }
         public string Name { get; set; }
         public int Score { get; set; }
+        public string Intro { get; set; }
 
         public ICollection<Enrollment> Enrollments { get; set; }
     }

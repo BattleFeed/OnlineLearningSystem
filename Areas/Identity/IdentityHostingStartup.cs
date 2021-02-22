@@ -20,7 +20,8 @@ namespace OnlineLearningSystem.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("SystemContextConnection")));
 
-                services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+                services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+                    .AddRoles<IdentityRole>()    
                     .AddEntityFrameworkStores<UserContext>();
             });
         }
