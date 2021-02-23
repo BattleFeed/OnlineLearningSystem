@@ -15,15 +15,15 @@ namespace OnlineLearningSystem.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((context, services) => {
-                services.AddDbContext<UserContext>(options =>
-                    options.UseSqlServer(
-                        context.Configuration.GetConnectionString("SystemContextConnection")));
+            //builder.ConfigureServices((context, services) => {
+            //    services.AddDbContext<UserContext>(options =>
+            //        options.UseSqlServer(
+            //            context.Configuration.GetConnectionString("SystemContextConnection")));
 
-                services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
-                    .AddRoles<IdentityRole>()    
-                    .AddEntityFrameworkStores<UserContext>();
-            });
+            //    services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+            //        .AddRoles<IdentityRole>()    
+            //        .AddEntityFrameworkStores<UserContext>();
+            //});
         }
     }
 }

@@ -11,6 +11,10 @@ namespace OnlineLearningSystem.Data
 {
     public class UserContext : IdentityDbContext<User>
     {
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Section> Sections { get; set; }
+        public DbSet<Problem> Problems { get; set; }
+
         public UserContext(DbContextOptions<UserContext> options)
             : base(options)
         {
@@ -18,6 +22,10 @@ namespace OnlineLearningSystem.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Course>().ToTable("Course");
+            builder.Entity<Section>().ToTable("Sections");
+            builder.Entity<Problem>().ToTable("Problems");
+
             base.OnModelCreating(builder);
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.

@@ -11,6 +11,7 @@ namespace OnlineLearningSystem.Models
     {
         [DataType(DataType.Date)]
         [Display(Name = "Enrollment Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         [PersonalData]
         public DateTime EnrollmentDate { get; set; }
       

@@ -17,14 +17,7 @@ namespace OnlineLearningSystem.Data
                 return;
             }
             
-            //var users = new User[]
-            //{
-            //    new User{ UserName = "Alpha", Email = "Alpha@example.com", EnrollmentDate = DateTime.Now, EmailConfirmed = true},
-            //    new User{ UserName = "Bravo", Email = "Bravo@example.com", EnrollmentDate = DateTime.Now, EmailConfirmed = true},
-            //    new User{ UserName = "Charlie", Email = "Charlie@example.com", EnrollmentDate = DateTime.Now, EmailConfirmed = true},
-            //    new User{ UserName = "Delta", Email = "Delta@example.com", EnrollmentDate = DateTime.Now, EmailConfirmed = true},
-            //    new User{ UserName = "Echo", Email = "Echo@example.com", EnrollmentDate = DateTime.Now, EmailConfirmed = true},
-            //};
+            
 
 
         }
