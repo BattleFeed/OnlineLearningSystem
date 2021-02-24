@@ -1,15 +1,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using OnlineLearningSystem.Data;
 using OnlineLearningSystem.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UEditor.Core;
@@ -28,8 +31,6 @@ namespace OnlineLearningSystem
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddUEditorService("wwwroot/lib/ueditor/net/config.json");
-
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -40,6 +41,8 @@ namespace OnlineLearningSystem
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<UserContext>();
+
+            services.AddUEditorService();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +60,16 @@ namespace OnlineLearningSystem
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "upload")),
+                    RequestPath = "/upload",
+                    OnPrepareResponse = ctx =>
+                    {
+                        ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=36000");
+                    }
+            });
 
             app.UseRouting();
 
