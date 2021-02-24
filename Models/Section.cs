@@ -14,10 +14,7 @@ namespace OnlineLearningSystem.Models
         public string Intro { get; set; }
         public Course Course { get; set; }
 
-        public string VideoLink1 { get; set; }
-        public string VideoLink2 { get; set; }
-        public string VideoLink3 { get; set; }
-        public string VideoLink4 { get; set; }
+        public string Content { get; set; }
 
         public ICollection<Problem> ProblemSet { get; set; }
     }
