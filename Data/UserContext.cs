@@ -22,7 +22,7 @@ namespace OnlineLearningSystem.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Course>().ToTable("Course");
+            builder.Entity<Course>().ToTable("Courses");
             builder.Entity<Section>().ToTable("Sections");
             builder.Entity<Problem>().ToTable("Problems");
 
