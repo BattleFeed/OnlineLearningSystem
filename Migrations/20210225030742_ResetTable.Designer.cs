@@ -10,8 +10,8 @@ using OnlineLearningSystem.Data;
 namespace OnlineLearningSystem.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210220074450_CreateIdentitySchema")]
-    partial class CreateIdentitySchema
+    [Migration("20210225030742_ResetTable")]
+    partial class ResetTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -163,6 +163,9 @@ namespace OnlineLearningSystem.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Intro")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -171,7 +174,7 @@ namespace OnlineLearningSystem.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Course");
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("OnlineLearningSystem.Models.Enrollment", b =>
@@ -197,6 +200,73 @@ namespace OnlineLearningSystem.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Enrollment");
+                });
+
+            modelBuilder.Entity("OnlineLearningSystem.Models.Problem", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Choice1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Choice2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Choice3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Choice4")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CorrectChoiceID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SectionID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("SectionID");
+
+                    b.ToTable("Problems");
+                });
+
+            modelBuilder.Entity("OnlineLearningSystem.Models.Section", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CourseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Intro")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CourseID");
+
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("OnlineLearningSystem.Models.User", b =>
@@ -338,9 +408,36 @@ namespace OnlineLearningSystem.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("OnlineLearningSystem.Models.Problem", b =>
+                {
+                    b.HasOne("OnlineLearningSystem.Models.Section", null)
+                        .WithMany("ProblemSet")
+                        .HasForeignKey("SectionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OnlineLearningSystem.Models.Section", b =>
+                {
+                    b.HasOne("OnlineLearningSystem.Models.Course", "Course")
+                        .WithMany("Sections")
+                        .HasForeignKey("CourseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+                });
+
             modelBuilder.Entity("OnlineLearningSystem.Models.Course", b =>
                 {
                     b.Navigation("Enrollments");
+
+                    b.Navigation("Sections");
+                });
+
+            modelBuilder.Entity("OnlineLearningSystem.Models.Section", b =>
+                {
+                    b.Navigation("ProblemSet");
                 });
 
             modelBuilder.Entity("OnlineLearningSystem.Models.User", b =>

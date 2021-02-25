@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OnlineLearningSystem.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class ResetTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,17 +49,18 @@ namespace OnlineLearningSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Course",
+                name: "Courses",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Score = table.Column<int>(type: "int", nullable: false)
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    Intro = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Course", x => x.ID);
+                    table.PrimaryKey("PK_Courses", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -188,9 +189,58 @@ namespace OnlineLearningSystem.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Enrollment_Course_CourseID",
+                        name: "FK_Enrollment_Courses_CourseID",
                         column: x => x.CourseID,
-                        principalTable: "Course",
+                        principalTable: "Courses",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sections",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    Intro = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CourseID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sections", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Sections_Courses_CourseID",
+                        column: x => x.CourseID,
+                        principalTable: "Courses",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Problems",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SectionID = table.Column<int>(type: "int", nullable: false),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Choice1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Choice2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Choice3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Choice4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CorrectChoiceID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Problems", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Problems_Sections_SectionID",
+                        column: x => x.SectionID,
+                        principalTable: "Sections",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -243,6 +293,16 @@ namespace OnlineLearningSystem.Migrations
                 name: "IX_Enrollment_UserId",
                 table: "Enrollment",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Problems_SectionID",
+                table: "Problems",
+                column: "SectionID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_CourseID",
+                table: "Sections",
+                column: "CourseID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -266,13 +326,19 @@ namespace OnlineLearningSystem.Migrations
                 name: "Enrollment");
 
             migrationBuilder.DropTable(
+                name: "Problems");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Course");
+                name: "Sections");
+
+            migrationBuilder.DropTable(
+                name: "Courses");
         }
     }
 }

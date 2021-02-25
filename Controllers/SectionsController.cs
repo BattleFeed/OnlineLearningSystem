@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningSystem.Data;
 using OnlineLearningSystem.Models;
+using UEditor.Core;
 
 namespace OnlineLearningSystem.Controllers
 {
@@ -22,7 +23,9 @@ namespace OnlineLearningSystem.Controllers
         // GET: Sections
         public async Task<IActionResult> Index()
         {
-            var userContext = _context.Sections.Include(s => s.Course);
+            var userContext = 
+                _context.Sections.Include(s => s.Course);
+            
             return View(await userContext.ToListAsync());
         }
 
@@ -48,7 +51,7 @@ namespace OnlineLearningSystem.Controllers
         // GET: Sections/Create
         public IActionResult Create()
         {
-            ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "ID");
+            ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "Name");
             return View();
         }
 
@@ -57,15 +60,19 @@ namespace OnlineLearningSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,CourseID,Score,Intro,Content")] Section section)
+        public async Task<IActionResult> Create([Bind("ID,CourseID,Name,Intro,Content")] Section section)
         {
+            int maxSectionID = _context.Sections.Where(s => s.CourseID == section.CourseID)
+                                                .Max(s => s.SectionID);
+            section.SectionID = maxSectionID + 1;
+            
             if (ModelState.IsValid)
             {
                 _context.Add(section);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "ID", section.CourseID);
+            ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "Name", section.CourseID);
             return View(section);
         }
 
@@ -82,7 +89,7 @@ namespace OnlineLearningSystem.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "ID", section.CourseID);
+            ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "Name", section.CourseID);
             return View(section);
         }
 
@@ -118,7 +125,7 @@ namespace OnlineLearningSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "ID", section.CourseID);
+            ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "Name", section.CourseID);
             return View(section);
         }
 

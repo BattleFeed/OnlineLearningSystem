@@ -8,7 +8,6 @@ namespace OnlineLearningSystem.Models
 {
     public class Problem
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
         public int SectionID { get; set; }
         public int Score { get; set; }

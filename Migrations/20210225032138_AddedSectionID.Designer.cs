@@ -10,8 +10,8 @@ using OnlineLearningSystem.Data;
 namespace OnlineLearningSystem.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210224084235_Added content property to section")]
-    partial class Addedcontentpropertytosection
+    [Migration("20210225032138_AddedSectionID")]
+    partial class AddedSectionID
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -174,7 +174,7 @@ namespace OnlineLearningSystem.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Course");
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("OnlineLearningSystem.Models.Enrollment", b =>
@@ -256,7 +256,13 @@ namespace OnlineLearningSystem.Migrations
                     b.Property<string>("Intro")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SectionID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");

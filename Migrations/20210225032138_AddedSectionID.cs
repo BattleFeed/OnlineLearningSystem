@@ -2,21 +2,22 @@
 
 namespace OnlineLearningSystem.Migrations
 {
-    public partial class AddedNamepropertytosection : Migration
+    public partial class AddedSectionID : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Name",
+            migrationBuilder.AddColumn<int>(
+                name: "SectionID",
                 table: "Sections",
-                type: "nvarchar(max)",
-                nullable: true);
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Name",
+                name: "SectionID",
                 table: "Sections");
         }
     }

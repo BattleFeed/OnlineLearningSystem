@@ -9,16 +9,17 @@ namespace OnlineLearningSystem.Models
 {
     public class Section
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
-        public string Name { get; set; }
-        public int CourseID { get; set; }
+        public int SectionID { get; set; } // 课程中为第x节
+        public string Name { get; set; }       
+
         public int Score { get; set; }
-        public string Intro { get; set; }
-        public Course Course { get; set; }
 
+        public string Intro { get; set; }       
         public string Content { get; set; }
-
+        
+        public int CourseID { get; set; }
+        public Course Course { get; set; }
         public ICollection<Problem> ProblemSet { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace OnlineLearningSystem
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<UserContext>();
 
-            services.AddUEditorService();
+            services.AddUEditorService(configFileRelativePath: "config.json");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

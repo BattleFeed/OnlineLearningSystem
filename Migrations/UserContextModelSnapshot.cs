@@ -172,7 +172,7 @@ namespace OnlineLearningSystem.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Course");
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("OnlineLearningSystem.Models.Enrollment", b =>
@@ -258,6 +258,9 @@ namespace OnlineLearningSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SectionID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
