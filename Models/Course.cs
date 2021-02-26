@@ -8,8 +8,12 @@ namespace OnlineLearningSystem.Models
 {
     public class Course
     {
+        [DisplayName("Course ID")]
         public int ID { get; set; }
+
+        [DisplayName("Course Name")]
         public string Name { get; set; }
+
         public int Score { get; set; }
 
         [DisplayName("Introduction")]

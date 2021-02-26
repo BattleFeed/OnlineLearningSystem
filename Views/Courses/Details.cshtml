@@ -39,9 +39,8 @@
                         @Html.DisplayFor(modelItem => item.SectionID)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        <a asp-controller="Sections" asp-action="details" asp-route-id="@item.ID">@Html.DisplayFor(modelItem => item.Name)</a>
                     </td>
-
                 </tr>
                 }
             </table>
@@ -49,6 +48,7 @@
     </dl>
 </div>
 <div>
+    <a asp-controller="Sections" asp-action="Create" asp-route-id="@Model.ID">Create Section</a> |
     <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

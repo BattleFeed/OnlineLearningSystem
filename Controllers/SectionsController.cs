@@ -21,13 +21,13 @@ namespace OnlineLearningSystem.Controllers
         }
 
         // GET: Sections
-        public async Task<IActionResult> Index()
-        {
-            var userContext = 
-                _context.Sections.Include(s => s.Course);
+        //public async Task<IActionResult> Index()
+        //{
+        //    var userContext = 
+        //        _context.Sections.Include(s => s.Course);
             
-            return View(await userContext.ToListAsync());
-        }
+        //    return View(await userContext.ToListAsync());
+        //}
 
         // GET: Sections/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -65,12 +65,12 @@ namespace OnlineLearningSystem.Controllers
             int maxSectionID = _context.Sections.Where(s => s.CourseID == section.CourseID)
                                                 .Max(s => s.SectionID);
             section.SectionID = maxSectionID + 1;
-            
+
             if (ModelState.IsValid)
             {
                 _context.Add(section);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Courses", new { id = section.CourseID});
             }
             ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "Name", section.CourseID);
             return View(section);
@@ -84,12 +84,13 @@ namespace OnlineLearningSystem.Controllers
                 return NotFound();
             }
 
-            var section = await _context.Sections.FindAsync(id);
+            var section = await _context.Sections
+                .Include(s => s.Course)
+                .FirstOrDefaultAsync(s => s.ID == id);
             if (section == null)
             {
                 return NotFound();
             }
-            ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "Name", section.CourseID);
             return View(section);
         }
 
@@ -98,7 +99,7 @@ namespace OnlineLearningSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,CourseID,Score,Intro,Content")] Section section)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,CourseID,SectionID,Name,Intro,Content")] Section section)
         {
             if (id != section.ID)
             {
@@ -123,9 +124,8 @@ namespace OnlineLearningSystem.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Courses", new { id = section.CourseID});
             }
-            ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "Name", section.CourseID);
             return View(section);
         }
 
@@ -156,7 +156,7 @@ namespace OnlineLearningSystem.Controllers
             var section = await _context.Sections.FindAsync(id);
             _context.Sections.Remove(section);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Courses", new { id = section.CourseID});
         }
 
         private bool SectionExists(int id)
