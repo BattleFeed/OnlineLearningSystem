@@ -38,7 +38,25 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model.ID">Delete</a> |
+    @foreach (var problem in Model.ProblemSet)
+    {
+
+    <div>
+        <p>@problem.Description</p>
+        <input type="radio" name="@problem.ID" value="1" /><span>@problem.Choice1</span>
+        <input type="radio" name="@problem.ID" value="2" /><span>@problem.Choice2</span>
+        <input type="radio" name="@problem.ID" value="3" /><span>@problem.Choice3</span>
+        <input type="radio" name="@problem.ID" value="4" /><span>@problem.Choice4</span>
+    </div>
+    }
+</div>
+<div>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a>
+        <span> | </span>
+        <a asp-action="Delete" asp-route-id="@Model.ID">Delete</a>
+        <span>| </span>
+    }
     <a asp-controller="Courses" asp-action="Details" asp-route-id="@Model.CourseID">Back to List</a>
 </div>

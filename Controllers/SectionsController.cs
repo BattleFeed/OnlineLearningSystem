@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningSystem.Data;
 using OnlineLearningSystem.Models;
-using UEditor.Core;
 
 namespace OnlineLearningSystem.Controllers
 {
@@ -39,6 +39,7 @@ namespace OnlineLearningSystem.Controllers
 
             var section = await _context.Sections
                 .Include(s => s.Course)
+                .Include(s => s.ProblemSet.OrderBy(p => p.ID))
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (section == null)
             {
@@ -49,6 +50,7 @@ namespace OnlineLearningSystem.Controllers
         }
 
         // GET: Sections/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["CourseID"] = new SelectList(_context.Courses, "ID", "Name");
@@ -60,7 +62,8 @@ namespace OnlineLearningSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,CourseID,Name,Intro,Content")] Section section)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create([Bind("CourseID,Name,Intro,Content")] Section section)
         {
             int maxSectionID = _context.Sections.Where(s => s.CourseID == section.CourseID)
                                                 .Max(s => s.SectionID);
@@ -77,6 +80,7 @@ namespace OnlineLearningSystem.Controllers
         }
 
         // GET: Sections/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -99,6 +103,7 @@ namespace OnlineLearningSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,CourseID,SectionID,Name,Intro,Content")] Section section)
         {
             if (id != section.ID)
@@ -130,6 +135,7 @@ namespace OnlineLearningSystem.Controllers
         }
 
         // GET: Sections/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -151,6 +157,7 @@ namespace OnlineLearningSystem.Controllers
         // POST: Sections/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var section = await _context.Sections.FindAsync(id);

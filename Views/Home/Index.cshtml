@@ -3,7 +3,16 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn programming through videos all over the world!</p>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <h1 class="display-4">Welcome, Admin!</h1>
+        <p>Feel free to manage the system here!</p>
+    }
+    else
+    {
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn programming through tutorials all over the world!</p>
+    }
     @*<iframe src="//player.bilibili.com/player.html?bvid=BV1ht411e7Fe&cid=67437449&page=1&high_quality=1&danmaku=0" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen="true" width=860 height=480> </iframe>*@
 </div>
