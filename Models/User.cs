@@ -18,7 +18,6 @@ namespace OnlineLearningSystem.Models
         [PersonalData]
         public int Score { get; set; }
 
-        [PersonalData]
-        public ICollection<Enrollment> Enrollments { get; set; }
+        public ICollection<UserProblem> UserProblemSet { get; set; }
     }
 }

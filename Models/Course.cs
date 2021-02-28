@@ -20,6 +20,5 @@ namespace OnlineLearningSystem.Models
         public string Intro { get; set; }
 
         public ICollection<Section> Sections { get; set; }
-        public ICollection<Enrollment> Enrollments { get; set; }
     }
 }

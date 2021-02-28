@@ -18,5 +18,8 @@ namespace OnlineLearningSystem.Models
         public string Choice3 { get; set; }
         public string Choice4 { get; set; }
         public int CorrectChoiceID { get; set; }
+
+        public Section Section { get; set; }
+        public ICollection<UserProblem> UserProblemSet { get; set; }
     }
 }
