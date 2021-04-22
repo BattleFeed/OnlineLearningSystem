@@ -14,7 +14,7 @@ namespace OnlineLearningSystem.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<Section> Sections { get; set; }
         public DbSet<Problem> Problems { get; set; }
-        public DbSet<UserProblem> UserProblems { get; set; }
+        public DbSet<UserScoreHistory> UserScoreHistories { get; set; }
 
         public UserContext(DbContextOptions<UserContext> options)
             : base(options)
@@ -26,10 +26,10 @@ namespace OnlineLearningSystem.Data
             builder.Entity<Course>().ToTable("Courses");
             builder.Entity<Section>().ToTable("Sections");
             builder.Entity<Problem>().ToTable("Problems");
-            builder.Entity<UserProblem>().ToTable("UserProblems");
+            builder.Entity<UserScoreHistory>().ToTable("UserScoreHistories");
 
-            builder.Entity<UserProblem>()
-                .HasKey(c => new { c.UserId, c.ProblemID });
+            builder.Entity<UserScoreHistory>()
+                .HasKey(c => new { c.UserId, c.SectionID });
 
             base.OnModelCreating(builder);
             // Customize the ASP.NET Identity model and override the defaults if needed.

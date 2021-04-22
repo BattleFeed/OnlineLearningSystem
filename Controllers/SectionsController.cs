@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningSystem.Data;
 using OnlineLearningSystem.Models;
+using OnlineLearningSystem.ViewModels;
 
 namespace OnlineLearningSystem.Controllers
 {
@@ -39,14 +42,94 @@ namespace OnlineLearningSystem.Controllers
 
             var section = await _context.Sections
                 .Include(s => s.Course)
-                .Include(s => s.ProblemSet.OrderBy(p => p.ID))
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (section == null)
             {
                 return NotFound();
             }
 
             return View(section);
+        }
+
+        // GET: Sections/Problems/5
+        public async Task<IActionResult> Problems(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var section = await _context.Sections
+                .Include(s => s.ProblemSet)
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (section == null)
+            {
+                return NotFound();
+            }
+
+            var pvmList = new List<ProblemVM>();
+            foreach (var problem in section.ProblemSet)
+            {
+                var pvm = new ProblemVM { Problem = problem, ID = problem.ID, CorrectAnswer = problem.CorrectChoiceID, Score = problem.Score };
+                pvmList.Add(pvm);
+            }
+            var vm = new ProblemPageVM { SectionID = Convert.ToInt32(id), Problems = pvmList};
+
+            return View(vm);
+        }
+
+        // POST: Sections/Problems/5
+        [HttpPost]
+        public async Task<IActionResult> Problems(ProblemPageVM vm)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            int score = 0;
+            int historyScore = 0;
+            int correctCount = 0;
+            foreach (var problem in vm.Problems)
+            {
+                if (problem.SelectedAnswer == null)
+                {
+                    continue;
+                }
+                if (problem.SelectedAnswer == problem.CorrectAnswer)
+                {
+                    score += problem.Score;
+                    correctCount++;
+                }
+            }
+
+            var history = await _context.UserScoreHistories
+                .FirstOrDefaultAsync(u => u.SectionID == vm.SectionID && u.UserId == userId);
+            if (history == null)
+            {
+                _context.UserScoreHistories.Add(new UserScoreHistory { UserId = userId, SectionID = vm.SectionID, HighScore = score });
+                currentUser.Score += score;
+            }
+            else
+            {
+                historyScore = history.HighScore;
+                history.HighScore = Math.Max(historyScore, score);
+                _context.Update(history);
+                currentUser.Score += (score > historyScore) ? (score - historyScore) : 0;
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Result", new { score = score, historyScore = historyScore, correctCount = correctCount, sectionID = vm.SectionID});
+        }
+
+        // GET: Sections/Result
+        public IActionResult Result(int score, int historyScore, int correctCount,int sectionID)
+        {
+            ViewData["Score"] = score;
+            ViewData["HistoryScore"] = historyScore;
+            ViewData["SectionID"] = sectionID;
+            ViewData["CorrectCount"] = correctCount;
+            return View();
         }
 
         // GET: Sections/Create
@@ -65,9 +148,15 @@ namespace OnlineLearningSystem.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("CourseID,Name,Intro,Content")] Section section)
         {
-            int maxSectionID = _context.Sections.Where(s => s.CourseID == section.CourseID)
-                                                .Max(s => s.SectionID);
-            section.SectionID = maxSectionID + 1;
+            var courseSections = _context.Sections.Where(s => s.CourseID == section.CourseID);
+            if (courseSections.Any())
+            {
+                section.SectionID = courseSections.Max(s => s.SectionID) + 1;
+            }
+            else
+            {
+                section.SectionID = 1;
+            }
 
             if (ModelState.IsValid)
             {

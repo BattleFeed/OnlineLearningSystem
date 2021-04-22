@@ -1,0 +1,53 @@
+﻿@model OnlineLearningSystem.ViewModels.ProblemPageVM
+
+@{
+    ViewData["Title"] = "Problems";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Problems</h1>
+
+<div>
+    <form asp-action="Problems">
+        @Html.HiddenFor(m => m.SectionID)
+        @for (int i = 0; i < Model.Problems.Count; i++)
+        {
+            @Html.HiddenFor(m => m.Problems[i].ID)
+            @Html.HiddenFor(m => m.Problems[i].Score)
+            @Html.HiddenFor(m => m.Problems[i].CorrectAnswer)
+
+            @Html.DisplayFor(m => m.Problems[i].Problem.Description)
+            <span>(@Html.DisplayFor(m => m.Problems[i].Problem.Score)')</span>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Problems" asp-action="Edit" asp-route-id="@Model.Problems[i].Problem.ID">Edit</a>
+                <span> | </span>
+                <a asp-controller="Problems" asp-action="Delete" asp-route-id="@Model.Problems[i].Problem.ID">Delete</a>
+            }
+            <br />
+
+            @Html.RadioButtonFor(m => m.Problems[i].SelectedAnswer, 1, new { id = 1 })
+            @Model.Problems[i].Problem.Choice1<br />
+
+            @Html.RadioButtonFor(m => m.Problems[i].SelectedAnswer, 2, new { id = 2 })
+            @Model.Problems[i].Problem.Choice2<br />
+
+            @Html.RadioButtonFor(m => m.Problems[i].SelectedAnswer, 3, new { id = 3 })
+            @Model.Problems[i].Problem.Choice3<br />
+
+            @Html.RadioButtonFor(m => m.Problems[i].SelectedAnswer, 4, new { id = 4 })
+            @Model.Problems[i].Problem.Choice4<br />
+            <br />
+        }
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@if (User.IsInRole("Admin"))
+{
+    <a asp-controller="Problems" asp-action="Create" asp-route-id="@Model.SectionID">Create a problem</a>
+    <span> | </span>
+}
+<a asp-action="Details" asp-route-id="@Model.SectionID">Back</a>

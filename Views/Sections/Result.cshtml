@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Test Result";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Test Result</h1>
+
+@if (Convert.ToInt32(ViewData["HistoryScore"]) != 0)
+{
+    <p>Your history highscore is: @ViewData["HistoryScore"] .</p>
+}
+<p>You've got @ViewData["CorrectCount"] problems right and scored @ViewData["Score"]!</p>
+<a asp-action="Details" asp-route-id="@ViewData["SectionID"]">Back</a>

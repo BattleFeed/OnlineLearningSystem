@@ -3,20 +3,22 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineLearningSystem.Data;
 
 namespace OnlineLearningSystem.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20210417064515_AddedUserScoreHistory")]
+    partial class AddedUserScoreHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -321,20 +323,15 @@ namespace OnlineLearningSystem.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("SectionID")
+                    b.Property<int>("ProblemID")
                         .HasColumnType("int");
 
                     b.Property<int>("HighScore")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProblemID")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "SectionID");
+                    b.HasKey("UserId", "ProblemID");
 
                     b.HasIndex("ProblemID");
-
-                    b.HasIndex("SectionID");
 
                     b.ToTable("UserScoreHistories");
                 });
@@ -414,13 +411,9 @@ namespace OnlineLearningSystem.Migrations
 
             modelBuilder.Entity("OnlineLearningSystem.Models.UserScoreHistory", b =>
                 {
-                    b.HasOne("OnlineLearningSystem.Models.Problem", null)
+                    b.HasOne("OnlineLearningSystem.Models.Problem", "Problem")
                         .WithMany("UserScoreHistories")
-                        .HasForeignKey("ProblemID");
-
-                    b.HasOne("OnlineLearningSystem.Models.Section", "Section")
-                        .WithMany()
-                        .HasForeignKey("SectionID")
+                        .HasForeignKey("ProblemID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -430,7 +423,7 @@ namespace OnlineLearningSystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Section");
+                    b.Navigation("Problem");
 
                     b.Navigation("User");
                 });

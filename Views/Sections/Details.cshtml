@@ -38,20 +38,6 @@
     </dl>
 </div>
 <div>
-    @foreach (var problem in Model.ProblemSet)
-    {
-    <div>
-        <p>@problem.Description</p>
-        <input type="radio" name="@problem.ID" value="1" /><span>@problem.Choice1</span><br/>
-        <input type="radio" name="@problem.ID" value="2" /><span>@problem.Choice2</span><br/>
-        <input type="radio" name="@problem.ID" value="3" /><span>@problem.Choice3</span><br/>
-        <input type="radio" name="@problem.ID" value="4" /><span>@problem.Choice4</span><br/>
-        <input type="submit" value="Redo" class="btn btn-primary" />
-        <input type="submit" value="Submit" class="btn btn-primary"/>
-    </div>
-    }
-</div>
-<div>
     @if (User.IsInRole("Admin"))
     {
         <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a>
@@ -59,5 +45,7 @@
         <a asp-action="Delete" asp-route-id="@Model.ID">Delete</a>
         <span>| </span>
     }
+    <a asp-action="Problems" asp-route-id="@Model.ID">Problems</a>
+    <span>| </span>
     <a asp-controller="Courses" asp-action="Details" asp-route-id="@Model.CourseID">Back to List</a>
 </div>
